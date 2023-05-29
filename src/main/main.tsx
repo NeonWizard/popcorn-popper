@@ -1,32 +1,25 @@
 import React, { useEffect, useState } from "react";
-
 import * as Phys from "react-dom-box2d";
+
+import Nameball from "../components/Nameball";
+
+import "./main.css";
 
 const Main = () => {
   // TODO: Store in a backend instead of locally
   const [memberList, setMemberList] = useState(
-    localStorage.getItem("memberlist") ?? ""
+    (localStorage.getItem("memberlist") ?? "").split(",")
   );
 
   useEffect(() => {
-    localStorage.setItem("memberlist", memberList);
+    localStorage.setItem("memberlist", memberList.join(","));
   }, [memberList]);
 
   return (
-    <Phys.World width={400} height={400} gravity={[0, 9.8]} className="world">
-      <Phys.Item left={5} top={100} restitution={0.8}>
-        <div className="box1">
-          Some text3 with <button>button</button> or any
-          <input type="text" placeholder="other html elements" />
-        </div>
-      </Phys.Item>
-
-      <Phys.Item shape="box" left={240} top={3} restitution={0.85}>
-        <div className="circle1">Box too</div>
-      </Phys.Item>
-      <Phys.Item shape="circle" left={240} top={3} restitution={0.85}>
-        <div className="circle1">circle too</div>
-      </Phys.Item>
+    <Phys.World width={600} height={400} gravity={[0, 9.8]} className="world">
+      {memberList.map((member) => (
+        <Nameball firstName={member}></Nameball>
+      ))}
     </Phys.World>
   );
 };

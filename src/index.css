@@ -11,23 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-.world {
-  box-sizing: border-box;
-  box-shadow: inset 0px 0px 7px 0px rgba(0, 0, 0, 0.6);
-}
-
-.box1 {
-  background-color: aquamarine;
-  max-width: 250px;
-}
-
-.circle1 {
-  background-color: red;
-  color: #ffffff;
-  text-align: center;
-  height: 100px;
-  width: 100px;
-  /* to make the text at center */
-  line-height: 100px;
-}
