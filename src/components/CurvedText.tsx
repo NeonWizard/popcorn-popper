@@ -20,24 +20,12 @@ import React from "react";
 import styled from "styled-components";
 
 type CurvedTextProps = {
-  text: string;
+  upperText: string;
+  lowerText: string;
   objectSize: number;
-  spacing?: number;
-  offset?: number;
-  overlap?: boolean;
 };
 
-const CurvedTextStyle = styled.div<{
-  overlap: boolean;
-  r: number;
-  d: number;
-  offset: number;
-}>`
-  margin-bottom: ${(props) => (props.overlap ? `-${props.r}px` : "0")};
-  width: ${(props) => props.d + props.offset * 2}px;
-  height: ${(props) => props.r + props.offset}px;
-  z-index: 500;
-
+const CurvedTextStyle = styled.div`
   path {
     fill: transparent;
   }
@@ -48,45 +36,53 @@ const CurvedTextStyle = styled.div<{
   }
 `;
 
-const CurvedText = ({
-  text,
-  objectSize,
-  spacing = -15,
-  offset = 15,
-  overlap = false,
-}: CurvedTextProps) => {
-  const diameter = objectSize + spacing * 2;
-  const radius = diameter / 2;
+const CurvedText = ({ upperText, lowerText, objectSize }: CurvedTextProps) => {
+  const d = objectSize;
+  const r = d / 2;
+  const cx = objectSize / 2;
+  const cy = objectSize / 2;
+
+  const upperOffset = 19;
+  const lowerOffset = 6;
 
   return (
-    <CurvedTextStyle
-      className="curved-text"
-      overlap={overlap}
-      r={radius}
-      d={diameter}
-      offset={offset}
-    >
-      <svg viewBox={`0 0 ${diameter + offset * 2} ${diameter + offset * 2}`}>
+    <CurvedTextStyle className="curved-text">
+      <svg>
         <path
           id="curve"
           d={`
-            M${offset},${radius + offset}
-            A${radius},${radius} 0 0,1 ${diameter + offset},${radius + offset}`}
+            M ${cx - r + upperOffset},${cy}
+            A ${cx - upperOffset},${cy - upperOffset} 0 0,1 ${
+            d - upperOffset
+          },${cy}
+          `}
+          fill="lime"
         />
         <path
           id="curve-bottom"
           d={`
-            M${offset},${radius + offset}
-            A${radius},${radius} 0 0,1 ${-(diameter + offset)},${
-            radius + offset
-          }`}
+            M ${cx - r + lowerOffset},${cy - lowerOffset}
+            A ${cx - lowerOffset},${cy} 0 0,0 ${d - lowerOffset},${
+            cy - lowerOffset
+          }
+          `}
+          fill="pink"
         />
         <text width="500">
-          <textPath xlinkHref="#curve" startOffset="50%">
-            {text}
+          <textPath
+            xlinkHref="#curve"
+            startOffset="50%"
+            style={{ fontSize: "1.1rem" }}
+          >
+            {upperText}
           </textPath>
-          <textPath xlinkHref="#curve-bottom" startOffset="50%">
-            swag ball
+          <textPath
+            xlinkHref="#curve-bottom"
+            startOffset="50%"
+            style={{ color: "#bbb", fontSize: "0.8rem" }}
+            letterSpacing="1.5"
+          >
+            {lowerText}
           </textPath>
         </text>
       </svg>
