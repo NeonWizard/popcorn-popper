@@ -2,9 +2,11 @@ import React, { FunctionComponent } from "react";
 import * as Phys from "react-dom-box2d";
 
 import "./style.css";
+import CurvedText from "./CurvedText";
 
 interface NameballProps {
-  firstName: string;
+  name: string;
+  role: string;
   left?: number;
   top?: number;
   fillColor?: string;
@@ -12,19 +14,26 @@ interface NameballProps {
 }
 
 const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
+  const diameter = 100;
+
   return (
     <Phys.Item
       shape="circle"
       left={props.left}
       top={props.top}
       restitution={0.65}
+      width={diameter}
+      height={diameter}
     >
       <div
         className="circle1"
         style={{ backgroundColor: props.fillColor, color: "white" }}
       >
-        <span className="ring">{props.firstName}</span>
-        {/* {props.firstName} */}
+        <CurvedText
+          upperText={props.name}
+          lowerText={props.role}
+          objectSize={diameter}
+        ></CurvedText>
       </div>
     </Phys.Item>
   );

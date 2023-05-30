@@ -18,7 +18,7 @@ const Main = () => {
   return (
     <Phys.World width={600} height={400} gravity={[0, 9.8]} className="world">
       {memberList.map((member) => (
-        <Nameball firstName={member}></Nameball>
+        <Nameball name={member} role="ui designer"></Nameball>
       ))}
     </Phys.World>
   );
