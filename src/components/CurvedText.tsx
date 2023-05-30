@@ -47,7 +47,7 @@ const CurvedText = ({ upperText, lowerText, objectSize }: CurvedTextProps) => {
 
   return (
     <CurvedTextStyle className="curved-text">
-      <svg>
+      <svg viewBox={`0 0 ${d} ${d}`}>
         <path
           id="curve"
           d={`
