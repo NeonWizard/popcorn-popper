@@ -13,3 +13,9 @@
   color: white;
   text-transform: uppercase;
 }
+
+.circle1:hover {
+  background-color: #fff !important;
+  color: black !important;
+  cursor: pointer;
+}
