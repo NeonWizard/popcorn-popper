@@ -4,6 +4,7 @@ import { Shake } from "reshake";
 
 import "./style.css";
 import CurvedText from "./CurvedText";
+import { useScreenShakeContext } from "../ScreenShakeContext";
 
 interface NameballProps {
   name: string;
@@ -15,10 +16,11 @@ interface NameballProps {
 }
 
 const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
+  const { setScreenShake } = useScreenShakeContext();
   const diameter = 100;
 
   return (
-    <Shake h={2} v={2} r={0}>
+    <Shake h={2} v={2} r={0} int={1}>
       <Phys.Item
         shape="circle"
         left={props.left}
@@ -30,6 +32,10 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
         <div
           className="circle1"
           style={{ backgroundColor: props.fillColor, color: "white" }}
+          onClick={() => {
+            setScreenShake(true);
+            setTimeout(() => setScreenShake(false), 100);
+          }}
         >
           <CurvedText
             upperText={props.name}
