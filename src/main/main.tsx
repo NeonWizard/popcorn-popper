@@ -38,7 +38,7 @@ const Main = () => {
         height={400}
         gravity={[0, 9.8]}
         className="world-box"
-        style={{ backgroundColor: "#111214" }}
+        style={{ backgroundColor: "#111214", zIndex: -1 }}
       >
         {memberList.map((member) => (
           <Nameball name={member} role="ui designer"></Nameball>
