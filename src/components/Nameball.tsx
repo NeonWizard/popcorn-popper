@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import * as Phys from "react-dom-box2d";
+import { Shake } from "reshake";
 
 import "./style.css";
 import CurvedText from "./CurvedText";
@@ -17,25 +18,27 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
   const diameter = 100;
 
   return (
-    <Phys.Item
-      shape="circle"
-      left={props.left}
-      top={props.top}
-      restitution={0.65}
-      width={diameter}
-      height={diameter}
-    >
-      <div
-        className="circle1"
-        style={{ backgroundColor: props.fillColor, color: "white" }}
+    <Shake h={2} v={2} r={0}>
+      <Phys.Item
+        shape="circle"
+        left={props.left}
+        top={props.top}
+        restitution={0.65}
+        width={diameter}
+        height={diameter}
       >
-        <CurvedText
-          upperText={props.name}
-          lowerText={props.role}
-          objectSize={diameter}
-        ></CurvedText>
-      </div>
-    </Phys.Item>
+        <div
+          className="circle1"
+          style={{ backgroundColor: props.fillColor, color: "white" }}
+        >
+          <CurvedText
+            upperText={props.name}
+            lowerText={props.role}
+            objectSize={diameter}
+          ></CurvedText>
+        </div>
+      </Phys.Item>
+    </Shake>
   );
 };
 
