@@ -19,7 +19,7 @@ interface NameballProps {
   fillColor?: string;
   textColor?: string;
 
-  onPop?: () => void;
+  onPop?: (coords: { x: number; y: number }) => void;
 }
 
 const Style = styled.div`
@@ -92,8 +92,8 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
       <Style>
         <Phys.Item
           shape="circle"
-          left={props.left}
-          top={props.top}
+          left={props.left ? props.left - diameter / 2 : undefined}
+          top={props.top ? props.top - diameter / 2 : undefined}
           restitution={0.65}
           width={diameter}
           height={diameter}
@@ -106,11 +106,11 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
           <div
             className={`circle ${!props.popped ? "unpopped" : ""}`}
             style={{ backgroundColor: fillColor, color: textColor }}
-            onClick={() => {
+            onClick={(event) => {
               if (!props.popped) {
                 setScreenShake(true);
                 setTimeout(() => setScreenShake(false), 100);
-                props.onPop?.();
+                props.onPop?.({ x: event.clientX, y: event.clientY });
               }
             }}
           >
@@ -132,11 +132,11 @@ Nameball.defaultProps = Object.create(
   {
     left: {
       enumerable: true,
-      get: () => Math.random() * 100,
+      get: () => Math.random() * 100 + 20,
     },
     top: {
       enumerable: true,
-      get: () => Math.random() * 100,
+      get: () => Math.random() * 100 + 20,
     },
     fillColor: {
       enumerable: true,

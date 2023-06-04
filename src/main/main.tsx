@@ -11,6 +11,15 @@ type Member = {
   role: string;
 };
 
+type PopTrajectory = {
+  x: number;
+  y: number;
+  force: {
+    x: number;
+    y: number;
+  };
+};
+
 const retrieveStoredMembers = (): Member[] => {
   const memberList = localStorage.getItem("memberlist") ?? "";
 
@@ -65,14 +74,37 @@ const Main = () => {
   ]);
   const [poppedMembers, setPoppedMembers] = useState<Member[]>([]);
 
+  // Keeps track of initial trajectories for newly popped balls
+  // Key is name+role
+  const [popTrajectories, setPopTrajectories] = useState<{
+    [key: string]: PopTrajectory;
+  }>({});
+
   // Store member list to localStorage when it changes
   useEffect(() => {
     storeMembers(memberList);
   }, [memberList]);
 
-  const handlePop = (member: Member) => {
+  const handlePop = (member: Member, coords: { x: number; y: number }) => {
+    // Remove member from waiting list
     setWaitingMembers(waitingMembers.filter((m) => m !== member));
+
+    // Add member to popped list
     setPoppedMembers(poppedMembers.concat(member));
+
+    // Create inital trajectory for popped ball
+    const key = member.name + member.role;
+    setPopTrajectories({
+      ...popTrajectories,
+      [key]: {
+        x: coords.x,
+        y: coords.y,
+        force: {
+          x: (Math.random() - 0.5) * 2000,
+          y: -1200 - Math.random() * 200,
+        },
+      },
+    });
   };
 
   return (
@@ -83,27 +115,25 @@ const Main = () => {
       <Phys.World
         width={window.innerWidth}
         height={window.innerHeight}
-        gravity={[0, 5]}
+        gravity={[0, 6.5]}
         className="world-screen"
         style={{ position: "fixed" }}
       >
-        {poppedMembers.map((member) => (
-          <Nameball
-            key={member.name + member.role}
-            name={member.name}
-            role={member.role}
-            popped={true}
-            initialForce={{ x: (Math.random() * 10 - 5) * 100, y: -600 }}
-            left={window.innerWidth / 2}
-            top={window.innerHeight / 3}
-          ></Nameball>
-        ))}
-        <Nameball
-          name="I'm freeee"
-          role="cya"
-          left={window.innerWidth / 2}
-          popped={true}
-        ></Nameball>
+        {poppedMembers.map((member) => {
+          // Find associated PopTrajectory
+          const popTrajectory = popTrajectories[member.name + member.role];
+          return (
+            <Nameball
+              key={member.name + member.role}
+              name={member.name}
+              role={member.role}
+              popped={true}
+              initialForce={popTrajectory.force}
+              left={popTrajectory.x}
+              top={popTrajectory.y}
+            ></Nameball>
+          );
+        })}
       </Phys.World>
 
       <NameHeader name="Wes" role="Software Engineer"></NameHeader>
@@ -120,7 +150,7 @@ const Main = () => {
             name={member.name}
             role={member.role}
             popped={false}
-            onPop={() => handlePop(member)}
+            onPop={(coords) => handlePop(member, coords)}
           ></Nameball>
         ))}
         <footer>
