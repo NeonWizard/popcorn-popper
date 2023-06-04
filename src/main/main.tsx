@@ -27,10 +27,11 @@ const storeMembers = (members: Member[]): void => {
 };
 
 const Style = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   .world-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .world-box {
@@ -71,34 +72,39 @@ const Main = () => {
 
   return (
     <Style>
+      {/* CONSIDER REPLACING PHYS.WORLD WITH THIS:
+       * https://codepen.io/DPerrySvendsen/pen/xwBJxN
+       */}
       <Phys.World
         width={window.innerWidth}
         height={window.innerHeight}
         gravity={[0, 5]}
         className="world-screen"
+        style={{ position: "fixed" }}
       >
         <Nameball
           name="I'm freeee"
           role="cya"
           left={window.innerWidth / 2}
         ></Nameball>
+      </Phys.World>
 
-        <NameHeader name="Wes" role="Software Engineer"></NameHeader>
-        <Phys.World
-          width={600}
-          height={400}
-          gravity={[0, 9.8]}
-          className="world-box"
-          style={{ backgroundColor: "#111214" }}
-        >
-          {memberList.map((member) => (
-            <Nameball name={member.name} role={member.role}></Nameball>
-          ))}
-          <footer>
-            Made with <span className="highlight">♡</span> for{" "}
-            <span className="highlight">Tesla</span>
-          </footer>
-        </Phys.World>
+      <NameHeader name="Wes" role="Software Engineer"></NameHeader>
+
+      <Phys.World
+        width={600}
+        height={400}
+        gravity={[0, 9.8]}
+        className="world-box"
+        // style={{ backgroundColor: "#111214" }}
+      >
+        {memberList.map((member) => (
+          <Nameball name={member.name} role={member.role}></Nameball>
+        ))}
+        <footer>
+          Made with <span className="highlight">♡</span> for{" "}
+          <span className="highlight">Tesla</span>
+        </footer>
       </Phys.World>
     </Style>
   );
