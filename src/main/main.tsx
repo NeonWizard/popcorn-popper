@@ -86,6 +86,7 @@ const Main = () => {
           name="I'm freeee"
           role="cya"
           left={window.innerWidth / 2}
+          popped={true}
         ></Nameball>
       </Phys.World>
 
@@ -99,7 +100,11 @@ const Main = () => {
         // style={{ backgroundColor: "#111214" }}
       >
         {memberList.map((member) => (
-          <Nameball name={member.name} role={member.role}></Nameball>
+          <Nameball
+            name={member.name}
+            role={member.role}
+            popped={false}
+          ></Nameball>
         ))}
         <footer>
           Made with <span className="highlight">♡</span> for{" "}

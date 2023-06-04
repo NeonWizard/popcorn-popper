@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import * as Phys from "react-dom-box2d";
 import { Shake } from "reshake";
 
@@ -10,6 +10,7 @@ import styled from "styled-components";
 interface NameballProps {
   name: string;
   role: string;
+  popped: boolean;
   left?: number;
   top?: number;
   fillColor?: string;
@@ -34,19 +35,55 @@ const Style = styled.div`
     text-transform: uppercase;
   }
 
-  .circle:hover {
+  .unpopped:hover {
     background-color: #fff !important;
     color: black !important;
     cursor: pointer;
   }
 `;
 
+// Util function to calculate what text color should be used
+// to contrast with background
+// https://24ways.org/2010/calculating-color-contrast
+function getContrastYIQ(hexcolor: string): string {
+  var r = parseInt(hexcolor.substring(1, 3), 16);
+  var g = parseInt(hexcolor.substring(3, 5), 16);
+  var b = parseInt(hexcolor.substring(5, 7), 16);
+  var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "black" : "white";
+}
+
+function getDarkColor() {
+  var color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += Math.floor(Math.random() * 10);
+  }
+  return color;
+}
+
+// TODO: Use Container pattern to separate to NameballContainer and Nameball
 const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
   const { setScreenShake } = useScreenShakeContext();
   const diameter = 100;
 
+  const fillColor = useMemo(
+    () => (props.popped ? getDarkColor() : props.fillColor),
+    [props.fillColor, props.popped]
+  );
+
+  // const textColor = getContrastYIQ(fillColor ?? "");
+  const textColor = "white";
+
   return (
-    <Shake h={2} v={2} r={0} int={1}>
+    <Shake
+      h={2}
+      v={2}
+      r={0}
+      int={1}
+      q={props.popped ? 0 : 300}
+      freez={!props.popped} // idk why but this fixes the ball shifting over when hovered
+      active={!props.popped}
+    >
       <Style>
         <Phys.Item
           shape="circle"
@@ -57,11 +94,13 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
           height={diameter}
         >
           <div
-            className="circle"
-            style={{ backgroundColor: props.fillColor, color: "white" }}
+            className={`circle ${!props.popped ? "unpopped" : ""}`}
+            style={{ backgroundColor: fillColor, color: textColor }}
             onClick={() => {
-              setScreenShake(true);
-              setTimeout(() => setScreenShake(false), 100);
+              if (!props.popped) {
+                setScreenShake(true);
+                setTimeout(() => setScreenShake(false), 100);
+              }
             }}
           >
             <CurvedText
