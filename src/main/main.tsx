@@ -70,6 +70,11 @@ const Main = () => {
     storeMembers(memberList);
   }, [memberList]);
 
+  const handlePop = (member: Member) => {
+    setWaitingMembers(waitingMembers.filter((m) => m !== member));
+    setPoppedMembers(poppedMembers.concat(member));
+  };
+
   return (
     <Style>
       {/* CONSIDER REPLACING PHYS.WORLD WITH THIS:
@@ -82,6 +87,14 @@ const Main = () => {
         className="world-screen"
         style={{ position: "fixed" }}
       >
+        {poppedMembers.map((member) => (
+          <Nameball
+            key={member.name + member.role}
+            name={member.name}
+            role={member.role}
+            popped={true}
+          ></Nameball>
+        ))}
         <Nameball
           name="I'm freeee"
           role="cya"
@@ -97,13 +110,14 @@ const Main = () => {
         height={400}
         gravity={[0, 9.8]}
         className="world-box"
-        // style={{ backgroundColor: "#111214" }}
       >
-        {memberList.map((member) => (
+        {waitingMembers.map((member) => (
           <Nameball
+            key={member.name + member.role}
             name={member.name}
             role={member.role}
             popped={false}
+            onPop={() => handlePop(member)}
           ></Nameball>
         ))}
         <footer>

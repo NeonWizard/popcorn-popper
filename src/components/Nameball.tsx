@@ -15,6 +15,8 @@ interface NameballProps {
   top?: number;
   fillColor?: string;
   textColor?: string;
+
+  onPop?: () => void;
 }
 
 const Style = styled.div`
@@ -100,6 +102,7 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
               if (!props.popped) {
                 setScreenShake(true);
                 setTimeout(() => setScreenShake(false), 100);
+                props.onPop?.();
               }
             }}
           >
