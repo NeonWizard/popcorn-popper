@@ -11,8 +11,11 @@ interface NameballProps {
   name: string;
   role: string;
   popped: boolean;
+
   left?: number;
   top?: number;
+  initialForce?: { x: number; y: number };
+
   fillColor?: string;
   textColor?: string;
 
@@ -94,6 +97,11 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
           restitution={0.65}
           width={diameter}
           height={diameter}
+          initialForce={
+            !!props.initialForce
+              ? [props.initialForce.x, props.initialForce.y]
+              : undefined
+          }
         >
           <div
             className={`circle ${!props.popped ? "unpopped" : ""}`}

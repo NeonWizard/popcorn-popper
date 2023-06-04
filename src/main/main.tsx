@@ -93,6 +93,9 @@ const Main = () => {
             name={member.name}
             role={member.role}
             popped={true}
+            initialForce={{ x: (Math.random() * 10 - 5) * 100, y: -600 }}
+            left={window.innerWidth / 2}
+            top={window.innerHeight / 3}
           ></Nameball>
         ))}
         <Nameball
