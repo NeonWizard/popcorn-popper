@@ -6,6 +6,26 @@ import NameHeader from "../components/NameHeader";
 
 import styled from "styled-components";
 
+type Member = {
+  name: string;
+  role: string;
+};
+
+const retrieveStoredMembers = (): Member[] => {
+  const memberList = localStorage.getItem("memberlist") ?? "";
+
+  return memberList
+    .split(",")
+    .map<Member>((s) => ({ name: s, role: "software dev" }));
+};
+
+const storeMembers = (members: Member[]): void => {
+  localStorage.setItem(
+    "memberlist",
+    members.map((member) => member.name).join(",")
+  );
+};
+
 const Style = styled.div`
   .world-screen {
     display: flex;
@@ -37,12 +57,16 @@ const Style = styled.div`
 
 const Main = () => {
   // TODO: Store in a backend instead of locally
-  const [memberList, setMemberList] = useState(
-    (localStorage.getItem("memberlist") ?? "").split(",")
-  );
+  const [memberList, setMemberList] = useState(retrieveStoredMembers());
 
+  const [waitingMembers, setWaitingMembers] = useState<Member[]>([
+    ...memberList,
+  ]);
+  const [poppedMembers, setPoppedMembers] = useState<Member[]>([]);
+
+  // Store member list to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem("memberlist", memberList.join(","));
+    storeMembers(memberList);
   }, [memberList]);
 
   return (
@@ -68,7 +92,7 @@ const Main = () => {
           style={{ backgroundColor: "#111214" }}
         >
           {memberList.map((member) => (
-            <Nameball name={member} role="ui designer"></Nameball>
+            <Nameball name={member.name} role={member.role}></Nameball>
           ))}
           <footer>
             Made with <span className="highlight">♡</span> for{" "}
