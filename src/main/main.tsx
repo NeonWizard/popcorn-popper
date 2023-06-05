@@ -21,18 +21,12 @@ type PopTrajectory = {
 };
 
 const retrieveStoredMembers = (): Member[] => {
-  const memberList = localStorage.getItem("memberlist") ?? "";
-
-  return memberList
-    .split(",")
-    .map<Member>((s) => ({ name: s, role: "software dev" }));
+  const memberList = localStorage.getItem("memberlist") ?? "[]";
+  return JSON.parse(memberList);
 };
 
 const storeMembers = (members: Member[]): void => {
-  localStorage.setItem(
-    "memberlist",
-    members.map((member) => member.name).join(",")
-  );
+  localStorage.setItem("memberlist", JSON.stringify(members));
 };
 
 const Style = styled.div`
