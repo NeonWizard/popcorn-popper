@@ -81,10 +81,10 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
 
   return (
     <Shake
-      h={2}
-      v={2}
+      h={3}
+      v={3}
       r={0}
-      int={1}
+      int={5}
       q={props.popped ? 0 : 300}
       freez={!props.popped} // idk why but this fixes the ball shifting over when hovered
       active={!props.popped}
