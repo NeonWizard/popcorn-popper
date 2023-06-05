@@ -80,12 +80,20 @@ const Main = () => {
     [key: string]: PopTrajectory;
   }>({});
 
+  const [lastPopped, setLastPopped] = useState<Member>({
+    name: "---",
+    role: "---",
+  });
+
   // Store member list to localStorage when it changes
   useEffect(() => {
     storeMembers(memberList);
   }, [memberList]);
 
   const handlePop = (member: Member, coords: { x: number; y: number }) => {
+    // Update header
+    setLastPopped(member);
+
     // Remove member from waiting list
     setWaitingMembers(waitingMembers.filter((m) => m !== member));
 
@@ -136,7 +144,7 @@ const Main = () => {
         })}
       </Phys.World>
 
-      <NameHeader name="Wes" role="Software Engineer"></NameHeader>
+      <NameHeader name={lastPopped.name} role={lastPopped.role}></NameHeader>
 
       <Phys.World
         width={600}

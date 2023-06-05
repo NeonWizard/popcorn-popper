@@ -12,6 +12,7 @@ const Container = styled.div`
   position: fixed;
   top: 100px;
   margin: 0;
+  z-index: -5; // TODO: Move to style prop
 
   h1 {
     color: white;
