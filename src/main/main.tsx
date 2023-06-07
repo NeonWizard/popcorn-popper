@@ -59,12 +59,6 @@ const Style = styled.div`
   }
 `;
 
-// TODO: Add 'favorite color' field to members to choose what color they pop to, fall back on random color
-// TODO: Ability to add members (including bulk import/export from JSON)
-// TODO: Ability to edit existing members
-// TODO: Ability to remove members
-// TODO: Particle effects on pop
-
 const Main = () => {
   // TODO: Store in a backend instead of locally
   const [memberList, setMemberList] = useState(retrieveStoredMembers());
