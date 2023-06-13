@@ -1,8 +1,4 @@
-import {
-  configureStore,
-  createListenerMiddleware,
-  getDefaultMiddleware,
-} from "@reduxjs/toolkit";
+import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
 import memberReducer from "./memberSlice";
 
 const listenerMiddleware = createListenerMiddleware();
