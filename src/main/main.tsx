@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Phys from "react-dom-box2d";
 import styled from "styled-components";
 
@@ -50,9 +50,26 @@ const Main = () => {
   const unpoppedMembers = useAppSelector(
     (state) => state.member.unpoppedMembers
   );
-  const poppedMembers = useAppSelector((state) => state.member.poppedMembers);
-
+  const storedPoppedMembers = useAppSelector(
+    (state) => state.member.poppedMembers
+  );
   const dispatch = useAppDispatch();
+
+  // Nasty, nasty code to make localStoraged balls appear one by one on page load
+  const [poppedMembers, setPoppedMembers] = useState<Member[]>([]);
+  useEffect(() => {
+    let i = 0;
+    const oldPoppedMembers = [...poppedMembers];
+    for (const member of storedPoppedMembers) {
+      if (!!poppedMembers.find((m) => m.id === member.id)) continue;
+      i += 1;
+      setTimeout(() => {
+        oldPoppedMembers.push(member);
+        setPoppedMembers([...oldPoppedMembers]);
+      }, i * 120);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storedPoppedMembers]);
 
   // Keeps track of initial trajectories for newly popped balls
   const [popTrajectories, setPopTrajectories] = useState<{
@@ -68,6 +85,9 @@ const Main = () => {
   const handlePop = (member: Member, coords: { x: number; y: number }) => {
     // Update header
     setLastPopped(member);
+
+    // Required so the spawn delay isn't applied to freshly popped balls
+    poppedMembers.push(member);
 
     // Dispatch popMember, causing member to move from unpopped to popped store array
     dispatch(popMember(member.id));
@@ -106,7 +126,7 @@ const Main = () => {
               x: window.innerWidth / 2,
               y: window.innerHeight / 1.2,
               force: {
-                x: 600,
+                x: Math.sign(Math.random() - 0.5) * 600,
                 y: 800,
               },
             };
