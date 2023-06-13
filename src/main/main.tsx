@@ -21,10 +21,9 @@ const Style = styled.div`
   justify-content: center;
   align-items: center;
 
-  .world-screen {
-  }
-
-  .world-box {
+  .world-box-display {
+    position: fixed;
+    z-index: -5;
     box-sizing: border-box;
     box-shadow: inset 0px 0px 7px 0px rgba(0, 0, 0, 0.6);
   }
@@ -39,10 +38,10 @@ const Style = styled.div`
     color: #333;
     font-family: monospace;
     font-size: 0.5em;
-  }
 
-  footer .highlight {
-    color: #bbb;
+    .highlight {
+      color: #bbb;
+    }
   }
 `;
 
@@ -146,6 +145,12 @@ const Main = () => {
       </Phys.World>
 
       <NameHeader name={lastPopped.name} role={lastPopped.role}></NameHeader>
+
+      {/* Mock box for rendering box style, so it can be rendered underneath balls */}
+      <div
+        className="world-box-display"
+        style={{ width: 600, height: 400 }}
+      ></div>
 
       <Phys.World
         width={600}
