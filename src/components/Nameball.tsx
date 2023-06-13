@@ -22,11 +22,12 @@ interface NameballProps {
   onPop?: (coords: { x: number; y: number }) => void;
 }
 
-const Style = styled.div`
+const Style = styled.div<{ color: string }>`
   .circle {
     // background-color: #bb0000;
     // background: radial-gradient(#d00, #900);
     // background: radial-gradient(#22222a, #1a1a1f) !important;
+    background-color: ${(props) => props.color};
     box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.6);
     text-align: center;
     height: 120px;
@@ -66,7 +67,7 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
   const diameter = 100;
 
   const fillColor = useMemo(
-    () => (props.popped ? getRainbowColor() : props.fillColor),
+    () => (props.popped ? getRainbowColor() : props.fillColor) ?? "#22222a",
     [props.fillColor, props.popped]
   );
 
@@ -83,7 +84,7 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
       freez={!props.popped} // idk why but this fixes the ball shifting over when hovered
       active={!props.popped}
     >
-      <Style>
+      <Style color={fillColor}>
         <Phys.Item
           shape="circle"
           left={props.left ? props.left - diameter / 2 : undefined}
@@ -99,7 +100,7 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
         >
           <div
             className={`circle ${!props.popped ? "unpopped" : ""}`}
-            style={{ backgroundColor: fillColor, color: textColor }}
+            style={{ color: textColor }}
             onClick={(event) => {
               if (!props.popped) {
                 setScreenShake(true);
