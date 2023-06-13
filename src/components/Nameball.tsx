@@ -51,8 +51,6 @@ const Style = styled.div<{ color: string }>`
 function getRainbowColor() {
   const colors = [
     "#980000", // red
-    "#984500", // orange
-    "#a77f03", // yellow
     "#0c8900", // green
     "#004093", // blue
     "#8b24c7", // purble
