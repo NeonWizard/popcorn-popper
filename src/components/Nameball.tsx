@@ -47,23 +47,17 @@ const Style = styled.div`
   }
 `;
 
-// Util function to calculate what text color should be used
-// to contrast with background
-// https://24ways.org/2010/calculating-color-contrast
-function getContrastYIQ(hexcolor: string): string {
-  var r = parseInt(hexcolor.substring(1, 3), 16);
-  var g = parseInt(hexcolor.substring(3, 5), 16);
-  var b = parseInt(hexcolor.substring(5, 7), 16);
-  var yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 128 ? "black" : "white";
-}
+function getRainbowColor() {
+  const colors = [
+    "#980000", // red
+    "#984500", // orange
+    "#a77f03", // yellow
+    "#0c8900", // green
+    "#004093", // blue
+    "#8b24c7", // purble
+  ];
 
-function getDarkColor() {
-  var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += Math.floor(Math.random() * 10);
-  }
-  return color;
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 // TODO: Use Container pattern to separate to NameballContainer and Nameball
@@ -72,7 +66,7 @@ const Nameball: FunctionComponent<NameballProps> = (props: NameballProps) => {
   const diameter = 100;
 
   const fillColor = useMemo(
-    () => (props.popped ? getDarkColor() : props.fillColor),
+    () => (props.popped ? getRainbowColor() : props.fillColor),
     [props.fillColor, props.popped]
   );
 
