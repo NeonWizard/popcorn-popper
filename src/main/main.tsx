@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Phys from "react-dom-box2d";
+import styled from "styled-components";
 
 import Nameball from "../components/Nameball";
 import NameHeader from "../components/NameHeader";
-
-import styled from "styled-components";
-
-type Member = {
-  name: string;
-  role: string;
-};
+import { Member, popMember } from "../app/memberSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 
 type PopTrajectory = {
   x: number;
@@ -18,15 +14,6 @@ type PopTrajectory = {
     x: number;
     y: number;
   };
-};
-
-const retrieveStoredMembers = (): Member[] => {
-  const memberList = localStorage.getItem("memberlist") ?? "[]";
-  return JSON.parse(memberList);
-};
-
-const storeMembers = (members: Member[]): void => {
-  localStorage.setItem("memberlist", JSON.stringify(members));
 };
 
 const Style = styled.div`
@@ -60,45 +47,35 @@ const Style = styled.div`
 `;
 
 const Main = () => {
-  // TODO: Store in a backend instead of locally
-  const [memberList, setMemberList] = useState(retrieveStoredMembers());
+  const unpoppedMembers = useAppSelector(
+    (state) => state.member.unpoppedMembers
+  );
+  const poppedMembers = useAppSelector((state) => state.member.poppedMembers);
 
-  const [waitingMembers, setWaitingMembers] = useState<Member[]>([
-    ...memberList,
-  ]);
-  const [poppedMembers, setPoppedMembers] = useState<Member[]>([]);
+  const dispatch = useAppDispatch();
 
   // Keeps track of initial trajectories for newly popped balls
-  // Key is name+role
   const [popTrajectories, setPopTrajectories] = useState<{
-    [key: string]: PopTrajectory;
+    [id: number]: PopTrajectory;
   }>({});
 
   const [lastPopped, setLastPopped] = useState<Member>({
+    id: 0,
     name: "---",
     role: "---",
   });
-
-  // Store member list to localStorage when it changes
-  useEffect(() => {
-    storeMembers(memberList);
-  }, [memberList]);
 
   const handlePop = (member: Member, coords: { x: number; y: number }) => {
     // Update header
     setLastPopped(member);
 
-    // Remove member from waiting list
-    setWaitingMembers(waitingMembers.filter((m) => m !== member));
-
-    // Add member to popped list
-    setPoppedMembers(poppedMembers.concat(member));
+    // Dispatch popMember, causing member to move from unpopped to popped store array
+    dispatch(popMember(member.id));
 
     // Create inital trajectory for popped ball
-    const key = member.name + member.role;
     setPopTrajectories({
       ...popTrajectories,
-      [key]: {
+      [member.id]: {
         x: coords.x,
         y: coords.y,
         force: {
@@ -123,10 +100,20 @@ const Main = () => {
       >
         {poppedMembers.map((member) => {
           // Find associated PopTrajectory
-          const popTrajectory = popTrajectories[member.name + member.role];
+          let popTrajectory = popTrajectories[member.id];
+          if (popTrajectory === undefined) {
+            popTrajectory = {
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 1.2,
+              force: {
+                x: 600,
+                y: 800,
+              },
+            };
+          }
           return (
             <Nameball
-              key={member.name + member.role}
+              key={member.id}
               name={member.name}
               role={member.role}
               popped={true}
@@ -146,9 +133,9 @@ const Main = () => {
         gravity={[0, 9.8]}
         className="world-box"
       >
-        {waitingMembers.map((member) => (
+        {unpoppedMembers.map((member) => (
           <Nameball
-            key={member.name + member.role}
+            key={member.id}
             name={member.name}
             role={member.role}
             popped={false}
