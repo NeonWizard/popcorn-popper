@@ -52,7 +52,7 @@ function getRainbowColor() {
   const colors = [
     "#980000", // red
     "#0c8900", // green
-    "#004093", // blue
+    "#002073", // blue
     "#8b24c7", // purble
   ];
 
