@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import * as Phys from "react-dom-box2d";
 import styled from "styled-components";
+import {
+  IoAddOutline,
+  IoRemoveOutline,
+  IoRefreshOutline,
+} from "react-icons/io5";
 
 import Nameball from "../components/Nameball";
 import NameHeader from "../components/NameHeader";
 import { Member, popMember } from "../app/memberSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { IoPencilOutline } from "react-icons/io5";
 
 type PopTrajectory = {
   x: number;
@@ -26,6 +32,21 @@ const Style = styled.div`
     z-index: -5;
     box-sizing: border-box;
     box-shadow: inset 0px 0px 7px 0px rgba(0, 0, 0, 0.6);
+    transform: translateX(0); // hack
+  }
+
+  .world-box-controls {
+    position: fixed;
+    left: calc(50% + 300px);
+    top: calc(50% - 200px);
+    transform: translateX(-100%) translateY(-100%);
+    font-size: 0.8em;
+
+    * {
+      margin-right: 2px;
+      z-index: 999;
+      cursor: pointer;
+    }
   }
 
   footer {
@@ -151,6 +172,12 @@ const Main = () => {
         className="world-box-display"
         style={{ width: 600, height: 400 }}
       ></div>
+      <div className="world-box-controls">
+        <IoAddOutline color="lime" />
+        <IoRemoveOutline color="red" />
+        <IoPencilOutline color="gray" />
+        <IoRefreshOutline color="gray" />
+      </div>
 
       <Phys.World
         width={600}
